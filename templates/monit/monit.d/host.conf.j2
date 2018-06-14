@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+
+check host {{ item.host }} with address {{ item.address }}
+  if failed
+    {% if item.port is defined and item.port %}port {{ item.port }}{% endif %}
+    {% if item.protocol is defined and item.protocol %}protocol {{ item.protocol }}{% endif %}
+    {% if item.type is defined and item.type %}type {{ item.type }}{% endif %}
+    {% if item.ssl_options is defined and item.ssl_options %}
+    with ssl options { {% for o in item.ssl_options %}{{ o.key }}: {{ o.value }}{% endfor %} }
+    {% endif %}
+  then alert
+  {% if item.group is defined and item.group %}
+  group {{ item.group }}
+  {% endif %}
+  {% if item.passive is defined and item.passive %}
+  mode passive
+  {% endif %}

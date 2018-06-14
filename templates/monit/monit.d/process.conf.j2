@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+
+{% set monit_tpl_process = item.process | default(item.pid | basename | replace('.pid', '')) -%}
+check process {{ monit_tpl_process }} with pidfile {{ item.pid }}
+  start program = "{{ item.start | default('/etc/init.d/' + monit_tpl_process + " start") }}" with timeout {{ item.timeout | default("60") }} seconds
+  stop program = "{{ item.stop | default('/etc/init.d/' + monit_tpl_process + " stop") }}"
+{% if item.group is defined and item.group %}{{ item.group | indent(2, true) }}{% endif %}
+  {% if item.passive is defined and item.passive %}
+  mode passive
+  {% endif %}

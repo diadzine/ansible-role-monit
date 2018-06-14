@@ -1,0 +1,10 @@
+---
+# handlers file for ansible-role-monit
+
+- name: restart monit
+  service:
+    name: monit
+    state: restarted
+
+- name: reload monit
+  command: "monit reload"

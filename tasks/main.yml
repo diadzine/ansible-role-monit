@@ -1,0 +1,59 @@
+---
+# tasks file for ansible-role-monit
+
+- name: Install Monit.
+  yum:
+    pkg: monit
+    state: installed
+
+- name: Update Monit configuration.
+  template:
+    src: "monit/monitrc.j2"
+    dest: "/etc/monit/monitrc"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart monit
+
+- name: Create Monit process config files.
+  template:
+    src: "monit/monit.d/{{ item.type | default('process') }}.conf.j2"
+    dest: "/etc/monit/monit.d/{{ item.type | default('process') }}_{{ item.process | default(item.pid | basename | replace('.pid', '')) }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  with_flattened:
+    - "{{ monit_process_list }}"
+  when: item.pid is defined and item.pid
+  notify: reload monit
+
+- name: Create Monit hosts config files.
+  template:
+    src: "monit/monit.d/{{ item.type | default('host') }}.conf.j2"
+    dest: "/etc/monit/monit.d/{{ item.type | default('host') }}_{{ item.host }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  with_flattened:
+    - "{{ monit_host_list }}"
+  when: item.host is defined and item.host
+  notify: reload monit
+
+- name: Determine queued messages
+  command: "ls -1 {{ monit_eventqueue_directory }}/"
+  register: monit_queued_messages
+  when: not monit_email_enable or not monit_eventqueue_enable
+  changed_when: False
+
+- name: Remove queued messages
+  file:
+    path: "{{ monit_eventqueue_directory }}/{{ item }}"
+    state: absent
+  when: not monit_email_enable or not monit_eventqueue_enable
+  with_items: "{{ monit_queued_messages.stdout_lines | default([]) }}"
+
+- name: Ensure Monit is started and enabled on boot.
+  service:
+    name: monit
+    state: started
+    enabled: yes
