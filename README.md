@@ -1,6 +1,8 @@
 Ansible Role: Monit
 ===================
 
+[![Build Status](https://travis-ci.org/diadzine/ansible-role-monit.svg?branch=master)](https://travis-ci.org/diadzine/ansible-role-monit)
+
 An Ansible Role that installs Monit on CentOS.
 
 Requirements
