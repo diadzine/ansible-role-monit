@@ -39,10 +39,15 @@
   when: item.host is defined and item.host
   notify: reload monit
 
+- name: Test if event queue dir exists.
+  stat:
+    path: "{{ monit_eventqueue_directory }}"
+  register: dir_details
+
 - name: Determine queued messages
   command: "ls -1 {{ monit_eventqueue_directory }}/"
   register: monit_queued_messages
-  when: not monit_email_enable or not monit_eventqueue_enable
+  when: dir_details.stat.exists and (not monit_email_enable or not monit_eventqueue_enable)
   changed_when: False
 
 - name: Remove queued messages
