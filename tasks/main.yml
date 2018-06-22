@@ -18,7 +18,7 @@
 - name: Get previous config files.
   find:
     paths: /etc/monit.d
-    patterns: *.conf
+    patterns: "*.conf"
   register: previous_config_files
 
 - name: Delete previous config files.
