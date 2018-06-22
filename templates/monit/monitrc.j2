@@ -49,7 +49,7 @@ set mail-format {
 set httpd port {{ monit_port }}
 {% if monit_address is defined %}  use address {{ monit_address }}{{ '\n' }}{% endif %}
 {% for a in monit_allow %}  allow {{ a }}{{ '\n' }}{% endfor %}
-{% if monit_username is defined and monit_password is defined %}  allow {{ monit_username }}:{{ monit_password }}{{ '\n' }}{% endif %}
+{% if monit_username is defined and monit_password is defined %}  allow "{{ monit_username }}":"{{ monit_password }}"{{ '\n' }}{% endif %}
 {% if monit_ssl %}  ssl enable
   pemfile {{ monit_cert }}
 {% endif %}
