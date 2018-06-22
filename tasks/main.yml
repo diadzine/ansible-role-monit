@@ -27,6 +27,18 @@
   when: item.pid is defined and item.pid
   notify: reload monit
 
+- name: Create Monit hosts config files (PING).
+  template:
+    src: "monit/monit.d/ping.conf.j2"
+    dest: "/etc/monit.d/{{ item.type | default('host') }}_{{ item.host }}.conf"
+    owner: root
+    group: root
+    mode: 0700
+  with_flattened:
+    - "{{ monit_host_list }}"
+  when: item.type is defined and item.type == 'ping'
+  notify: reload monit
+
 - name: Create Monit hosts config files.
   template:
     src: "monit/monit.d/host.conf.j2"
@@ -36,7 +48,7 @@
     mode: 0700
   with_flattened:
     - "{{ monit_host_list }}"
-  when: item.host is defined and item.host
+  when: item.host is defined and item.host and (item.type is not defined or item.type != 'ping')
   notify: reload monit
 
 - name: Test if event queue dir exists.
