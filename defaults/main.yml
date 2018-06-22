@@ -2,7 +2,7 @@
 # defaults file for ansible-role-monit
 
 monit_poll_period: 30
-monit_poll_start_delay: 240
+# monit_poll_start_delay: 240
 
 monit_log: syslog
 
