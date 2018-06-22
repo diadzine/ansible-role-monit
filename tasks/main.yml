@@ -15,6 +15,18 @@
     mode: 0700
   notify: restart monit
 
+- name: Get previous config files.
+  find:
+    paths: /etc/monit.d
+    patterns: *.conf
+  register: previous_config_files
+
+- name: Delete previous config files.
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ previous_config_files.files }}"
+
 - name: Create Monit process config files.
   template:
     src: "monit/monit.d/process.conf.j2"
