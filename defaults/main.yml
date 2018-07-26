@@ -58,7 +58,11 @@ monit_host_list: []
 # monit_host_list:
 #   - host: 'foo'
 #     address: '1.2.3.4'
-#     port: '123'
-#     protocol: 'sip'
-#     type: 'udp'
+#     checks:
+#       - port: '123'
+#         type: 'tcp'
+#       - port: '456'
+#         protocol: 'sip'
+#         type: 'udp'
+#     ping: yes
 #     passive: yes

@@ -1,5 +1,0 @@
-# {{ ansible_managed }}
-
-check host {{ item.host }} with address {{ item.address }}
-  if failed ping then alert
-  {% if item.group is defined and item.group %}group {{ item.group }}{% endif %}
