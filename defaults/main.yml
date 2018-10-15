@@ -65,4 +65,6 @@ monit_host_list: []
 #         protocol: 'sip'
 #         type: 'udp'
 #     ping: yes
+#     restarts: 5
+#     cycles: 5
 #     passive: yes

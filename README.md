@@ -87,9 +87,15 @@ Monit process list to be monitored. `pid` parameter is mandatory.
     monit_host_list:
       - host: 'foo'
         address: '1.2.3.4'
-        port: '123'
-        protocol: 'sip'
-        type: 'udp'
+        checks:
+          - port: '123'
+            type: 'tcp'
+          - port: '456'
+            protocol: 'sip'
+            type:'udp'
+        ping: yes
+        restarts: 5
+        cycles: 5
         passive: yes
 
 Monit host list to be monitored. `host` and `address` parameters are mandatory.
