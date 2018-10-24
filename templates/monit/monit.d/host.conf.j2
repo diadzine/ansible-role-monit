@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 
 check host {{ item.host }} with address {{ item.address }}
-{% if item.checks is defined%}
+{% if item.checks is defined and item.checks %}
 {% for check in item.checks %}
   if failed
     {% if check.port is defined and check.port %}port {{ check.port }}{% endif %}
