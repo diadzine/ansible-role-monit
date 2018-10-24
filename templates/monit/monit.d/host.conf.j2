@@ -1,6 +1,7 @@
 # {{ ansible_managed }}
 
 check host {{ item.host }} with address {{ item.address }}
+{% if item.checks is defined%}
 {% for check in item.checks %}
   if failed
     {% if check.port is defined and check.port %}port {{ check.port }}{% endif %}
@@ -11,6 +12,7 @@ check host {{ item.host }} with address {{ item.address }}
     {% endif %}
   then {% if item.restarts is defined and item.cycles is defined %}restart{% else %}alert{% endif %}
 {% endfor %}
+{% endif %}
 {% if item.ping is defined and item.ping %}
   if failed ping then {% if item.restarts is defined and item.cycles is defined %}restart{% else %}alert{% endif %}
 {% endif %}
