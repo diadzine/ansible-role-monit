@@ -8,20 +8,32 @@ check host {{ item.host }} with address {{ item.address }}
     {% if check.protocol is defined and check.protocol %}protocol {{ check.protocol }}{% endif %}
     {% if check.type is defined and check.type %}type {{ check.type }}{% endif %}
     {% if check.ssl_options is defined and check.ssl_options %}
+    {% if item.cycles is defined %}
+      {% if item.times is defined %}
+        for {{ item.times }} times within {{ item.cycles }} cycles
+      {% else %}
+        for {{ item.cycles }} cycles
+      {% endif %}
+    {% endif %}
     with ssl options { {% for o in check.ssl_options %}{{ o.key }}: {{ o.value }}{% endfor %} }
     {% endif %}
-  then {% if item.restarts is defined and item.cycles is defined %}restart{% else %}alert{% endif %}
+  then alert
 {% endfor %}
 {% endif %}
 {% if item.ping is defined and item.ping %}
-  if failed ping then {% if item.restarts is defined and item.cycles is defined %}restart{% else %}alert{% endif %}
+  if failed ping
+  {% if item.cycles is defined %}
+    {% if item.times is defined %}
+      for {{ item.times }} times within {{ item.cycles }} cycles
+    {% else %}
+      for {{ item.cycles }} cycles
+    {% endif %}
+  {% endif %}
+  then alert
 {% endif %}
 {% if item.group is defined and item.group %}
   group {{ item.group }}
 {% endif %}
 {% if item.passive is defined and item.passive %}
   mode passive
-{% endif %}
-{% if item.restarts is defined and item.cycles is defined %}
-  if {{ item.restarts }} restarts within {{ item.cycles }} cycles then alert
 {% endif %}

@@ -94,7 +94,7 @@ Monit process list to be monitored. `pid` parameter is mandatory.
             protocol: 'sip'
             type:'udp'
         ping: yes
-        restarts: 5
+        times: 5
         cycles: 5
         passive: yes
 
